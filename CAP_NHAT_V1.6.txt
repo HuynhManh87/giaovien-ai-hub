@@ -1,0 +1,22 @@
+CẬP NHẬT HUB V1.6
+=================
+
+Cách an toàn nhất trên GitHub:
+1. Thay index.html
+2. Thay style.css
+3. Thay app.js
+4. Commit changes
+5. Chờ Vercel tự deploy
+
+Không cần sửa Google Sheets/Apps Script.
+Không đổi đường link Hub.
+Không đổi link các app.
+TKB vẫn nằm trên Trang chủ.
+
+Điểm mới:
+- Bỏ badge kỹ thuật Dùng dự phòng / Đã có link.
+- Card app gọn, mô tả tối đa 2 dòng.
+- Thống kê nhanh còn 4 số chính.
+- Trang Thống kê chi tiết + xếp hạng app theo lượt mở.
+- Quản trị chuyển xuống cuối sidebar.
+- Nhận diện Mạnh LB rõ hơn.

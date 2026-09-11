@@ -37,16 +37,17 @@
         <button class="nav-item" data-view="stats">
           <span class="nav-icon">▥</span><span>Thống kê</span>
         </button>
-        <button class="nav-item" data-view="admin">
-          <span class="nav-icon">⚙</span><span>Quản trị <small>V2</small></span>
-        </button>
       </nav>
 
       <div class="sidebar-note">
         <div class="quote-mark">“</div>
         <p>Công nghệ đồng hành cùng những người gieo chữ.</p>
       </div>
-      <div class="sidebar-footer">🌱 Vì một nền giáo dục tốt đẹp hơn.<div class="copyright-mini">© 2026 Mạnh LB<br>Zalo: 0352.891.487</div></div>
+      <div class="sidebar-footer">
+        🌱 Vì một nền giáo dục tốt đẹp hơn.
+        <button class="admin-link" data-view="admin" title="Quản trị hệ thống">⚙ Quản trị hệ thống</button>
+        <div class="copyright-mini">© 2026 Mạnh LB<br>Zalo: 0352.891.487</div>
+      </div>
     </aside>
 
     <main class="main">
@@ -59,10 +60,10 @@
         </div>
         <div class="user-area">
           <button class="icon-btn" id="clearFavoritesBtn" title="Xóa danh sách yêu thích">☆</button>
-          <div class="avatar">GV</div>
+          <div class="avatar">ML</div>
           <div class="user-copy">
-            <strong>Thầy/Cô quản trị</strong>
-            <span>Cổng ứng dụng</span>
+            <strong>Mạnh LB</strong>
+            <span>Tác giả hệ thống</span>
           </div>
         </div>
       </header>
@@ -70,7 +71,7 @@
       <section class="content">
         <section class="hero" id="heroSection">
           <div class="hero-copy">
-            <span class="eyebrow">MỘT LINK • TẤT CẢ ỨNG DỤNG</span>
+            <span class="eyebrow">MẠNH LB • MỘT LINK • TẤT CẢ ỨNG DỤNG</span>
             <h1>Tổng hợp tất cả ứng dụng trên một đường link</h1>
             <p>Quản lý, tìm kiếm và truy cập nhanh các công cụ dành cho giáo viên. Mỗi app vẫn hoạt động độc lập, cổng này chỉ làm nhiệm vụ tập trung và điều hướng.</p>
             <div class="hero-points">
@@ -100,7 +101,31 @@
           <div class="category-tabs" id="categoryTabs" aria-label="Lọc theo nhóm"></div>
         </section>
 
-        <div class="layout-grid">
+        <section class="stats-detail hidden" id="statsDetail">
+          <div class="stats-detail-grid">
+            <div class="detail-stat"><span>Hôm nay</span><strong id="detailVisitsToday">0</strong><small>Lượt truy cập</small></div>
+            <div class="detail-stat"><span>Hôm qua</span><strong id="detailVisitsYesterday">0</strong><small>Lượt truy cập</small></div>
+            <div class="detail-stat"><span>7 ngày qua</span><strong id="detailVisits7Days">0</strong><small>Lượt truy cập</small></div>
+            <div class="detail-stat"><span>Tháng này</span><strong id="detailVisitsMonth">0</strong><small>Lượt truy cập</small></div>
+            <div class="detail-stat accent"><span>Toàn thời gian</span><strong id="detailVisitsTotal">0</strong><small>Lượt truy cập</small></div>
+            <div class="detail-stat accent"><span>Lượt mở app</span><strong id="detailLaunches">0</strong><small>Tổng lượt mở ứng dụng</small></div>
+            <div class="detail-stat"><span>Ứng dụng</span><strong id="detailApps">0</strong><small>Đang quản lý</small></div>
+            <div class="detail-stat"><span>Tự đồng bộ</span><strong id="detailSynced">0</strong><small>Ứng dụng</small></div>
+          </div>
+
+          <div class="stats-ranking-card">
+            <div class="stats-ranking-head">
+              <div>
+                <h3>Ứng dụng được mở nhiều</h3>
+                <p>Xếp hạng theo tổng lượt mở ghi nhận trên hệ thống.</p>
+              </div>
+              <span class="stats-scope-pill" id="statsScopeDetail">Đang tải…</span>
+            </div>
+            <div id="appRanking" class="app-ranking"></div>
+          </div>
+        </section>
+
+        <div class="layout-grid" id="mainLayout">
           <section class="apps-panel">
             <div class="app-grid" id="appGrid"></div>
             <div class="empty-state hidden" id="emptyState">
@@ -122,16 +147,13 @@
             <section class="side-card">
               <div class="side-card-head">
                 <h3>📊 Thống kê nhanh</h3>
+                <button class="text-btn" id="viewStatsBtn">Xem chi tiết</button>
               </div>
               <div class="stats-grid stats-global-grid">
                 <div class="stat-box stat-highlight"><strong id="statVisitsToday">0</strong><span>hôm nay</span></div>
-                <div class="stat-box"><strong id="statVisitsYesterday">0</strong><span>hôm qua</span></div>
-                <div class="stat-box"><strong id="statVisits7Days">0</strong><span>7 ngày qua</span></div>
                 <div class="stat-box"><strong id="statVisitsMonth">0</strong><span>tháng này</span></div>
                 <div class="stat-box stat-highlight"><strong id="statVisitsTotal">0</strong><span>toàn thời gian</span></div>
                 <div class="stat-box"><strong id="statLaunches">0</strong><span>lượt mở app</span></div>
-                <div class="stat-box"><strong id="statApps">0</strong><span>ứng dụng</span></div>
-                <div class="stat-box"><strong id="statSynced">0</strong><span>app tự đồng bộ</span></div>
               </div>
               <div class="stats-scope" id="statsScope">Đang khởi tạo thống kê…</div>
             </section>
@@ -140,7 +162,7 @@
               <div class="tip-icon">💡</div>
               <div>
                 <strong>Mẹo sử dụng</strong>
-                <p>App có nhãn “✓ Tự đồng bộ” sẽ tự lấy phiên bản, ngày cập nhật và ghi chú mới nhất từ file app-info.js của chính app đó.</p>
+                <p>Ứng dụng có dấu “✓ Tự đồng bộ” sẽ tự cập nhật phiên bản và ngày cập nhật mới nhất trên cổng.</p>
               </div>
             </section>
           </aside>

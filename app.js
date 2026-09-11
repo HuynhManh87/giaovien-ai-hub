@@ -3,7 +3,7 @@ const FALLBACK_APPS = [
   {id:'giao-an-song-ngu',name:'Giáo án song ngữ',description:'Tra cứu và dịch thuật ngữ song ngữ, hỗ trợ xuất Word và giữ cấu trúc tài liệu.',category:'Giáo án',version:'V4.5.1',icon:'🌐',url:'https://giaoansongngu.vercel.app/',metadataUrl:'https://giaoansongngu.vercel.app/app-info.js',updated:'2026-09-08',featured:true},
   {id:'toan-ai',name:'Phiếu bài tập Toán THCS',description:'Tạo phiếu học tập, bài tập, đề kiểm tra và hỗ trợ hình học cho môn Toán THCS.',category:'Dạy học',version:'V35',icon:'➗',url:'https://phieu-toan-thcs.bacgptplus27.chatgpt.site/',metadataUrl:'https://phieu-toan-thcs.bacgptplus27.chatgpt.site/app-info.js',updated:'2026-09-11',featured:true},
   {id:'khtn-ai',name:'Phiếu bài tập KHTN',description:'Hỗ trợ xây dựng câu hỏi, bài tập và hoạt động vận dụng thực tế cho Khoa học tự nhiên.',category:'Dạy học',version:'V42',icon:'🧪',url:'https://phieu-khtn-ai.bacgptplus27.chatgpt.site/',metadataUrl:'https://phieu-khtn-ai.bacgptplus27.chatgpt.site/app-info.js',updated:'2026-09-11',featured:true},
-  {id:'tkb',name:'Xem thời khóa biểu',description:'Tra cứu thời khóa biểu nhà trường nhanh chóng trên máy tính và điện thoại.',category:'Quản lý',version:'V1',icon:'🗓️',url:'https://tkb-school-long-binh.vercel.app/',metadataUrl:'https://tkb-school-long-binh.vercel.app/app-info.js',updated:'2026-09-11',featured:false},
+  {id:'tkb',name:'Xem thời khóa biểu',description:'Tra cứu thời khóa biểu nhà trường nhanh chóng trên máy tính và điện thoại.',category:'Quản lý',version:'V1',icon:'🗓️',url:'https://tkb-school-long-binh.vercel.app/',metadataUrl:'https://tkb-school-long-binh.vercel.app/app-info.js',updated:'2026-09-11',featured:true},
   {id:'quan-ly-hoc-them',name:'Quản lý học thêm',description:'Theo dõi lớp học, học sinh, học phí, điểm danh và lịch học trên một nơi.',category:'Quản lý',version:'V1',icon:'👥',url:'',metadataUrl:'',updated:'2026-09-09',featured:false},
   {id:'chuan-hoa-giao-an',name:'Chuẩn hóa giáo án',description:'Rà soát, định dạng và hoàn thiện giáo án theo mẫu thống nhất của nhà trường.',category:'Giáo án',version:'V1',icon:'📄',url:'',metadataUrl:'',updated:'2026-09-08',featured:false},
   {id:'quan-ly-cong-viec',name:'Quản lý công việc',description:'Theo dõi nhiệm vụ, tiến độ, nhắc việc và phân loại công việc hằng ngày.',category:'Quản lý',version:'V1',icon:'✅',url:'',metadataUrl:'',updated:'2026-09-08',featured:false},
@@ -267,17 +267,17 @@ function renderApps() {
         <button class="favorite-btn ${fav ? 'is-favorite' : ''}" aria-label="${fav ? 'Bỏ yêu thích' : 'Thêm vào yêu thích'}" title="${fav ? 'Bỏ yêu thích' : 'Thêm vào yêu thích'}">${fav ? '★' : '☆'}</button>
       </div>
       <h3>${escapeHtml(app.name)}</h3>
-      <p>${escapeHtml(app.description)}</p>
-      ${app.note ? `<div class="update-note">🆕 ${escapeHtml(app.note)}</div>` : ''}
+      <p class="app-description">${escapeHtml(app.description)}</p>
+      ${app.note ? `<div class="update-note" title="${escapeHtml(app.note)}">🆕 ${escapeHtml(app.note)}</div>` : ''}
       <div class="app-meta">
         <span class="badge">${escapeHtml(app.category)}</span>
         <span class="badge version-badge">${escapeHtml(app.version || '')}</span>
         ${syncBadge}
-        <span class="badge ${isMaintenance ? 'maintenance' : linked ? 'live' : 'missing'}">${isMaintenance ? 'Bảo trì' : linked ? 'Đã có link' : 'Chưa cập nhật link'}</span>
+        ${isMaintenance ? '<span class="badge maintenance">Bảo trì</span>' : !linked ? '<span class="badge missing">Sắp ra mắt</span>' : ''}
         ${state.visitsScope === 'global' && globalOpens ? `<span class="badge usage-badge">👆 ${globalOpens.toLocaleString('vi-VN')} lượt mở</span>` : ''}
       </div>
       <div class="app-actions">
-        <button class="open-btn" ${linked && !isMaintenance ? '' : 'disabled'}>${isMaintenance ? 'Đang bảo trì' : linked ? 'Mở app →' : 'Chưa có link'}</button>
+        <button class="open-btn" ${linked && !isMaintenance ? '' : 'disabled'}>${isMaintenance ? 'Đang bảo trì' : linked ? 'Mở app →' : 'Sắp ra mắt'}</button>
       </div>`;
 
     card.querySelector('.favorite-btn').onclick = () => toggleFavorite(app.id);
@@ -288,10 +288,8 @@ function renderApps() {
 }
 
 function getSyncBadge(app) {
-  if (!app.metadataUrl) return '<span class="badge sync-local" title="Phiên bản lưu trong apps.json">Cục bộ</span>';
-  if (app.syncState === 'synced') return '<span class="badge sync-ok" title="Phiên bản được đọc tự động từ app-info.js">✓ Tự đồng bộ</span>';
-  if (app.syncState === 'checking') return '<span class="badge sync-checking">Đang đồng bộ…</span>';
-  return '<span class="badge sync-fallback" title="Không đọc được app-info.js, đang dùng dữ liệu dự phòng trong apps.json">Dùng dự phòng</span>';
+  if (app.syncState === 'synced') return '<span class="badge sync-ok" title="Phiên bản được cập nhật tự động">✓ Tự đồng bộ</span>';
+  return '';
 }
 
 function renderRecent() {
@@ -301,33 +299,74 @@ function renderRecent() {
       <div>
         <div class="recent-name">${escapeHtml(app.name)}</div>
         <span class="badge">${escapeHtml(app.version || '')}</span>
-        ${app.syncState === 'synced' ? '<span class="mini-sync">● đồng bộ</span>' : ''}
+        ${app.syncState === 'synced' ? '<span class="mini-sync">✓</span>' : ''}
       </div>
       <div class="recent-date">${formatDate(app.updated)}</div>
     </div>`).join('');
 }
 
 function renderStats() {
-  const vals = {
+  const quickVals = {
     statVisitsToday: state.visitsToday,
-    statVisitsYesterday: state.visitsYesterday,
-    statVisits7Days: state.visits7Days,
     statVisitsMonth: state.visitsMonth,
     statVisitsTotal: state.visitsTotal,
-    statLaunches: state.visitsScope === 'global' ? state.appLaunchesTotal : state.launches,
-    statApps: state.apps.length,
-    statSynced: state.syncedCount
+    statLaunches: state.visitsScope === 'global' ? state.appLaunchesTotal : state.launches
   };
-  Object.entries(vals).forEach(([id, value]) => {
+  const detailVals = {
+    detailVisitsToday: state.visitsToday,
+    detailVisitsYesterday: state.visitsYesterday,
+    detailVisits7Days: state.visits7Days,
+    detailVisitsMonth: state.visitsMonth,
+    detailVisitsTotal: state.visitsTotal,
+    detailLaunches: state.visitsScope === 'global' ? state.appLaunchesTotal : state.launches,
+    detailApps: state.apps.length,
+    detailSynced: state.syncedCount
+  };
+  Object.entries({ ...quickVals, ...detailVals }).forEach(([id, value]) => {
     const node = el(id);
     if (node) node.textContent = Number(value || 0).toLocaleString('vi-VN');
   });
+
+  const scopeHtml = state.visitsScope === 'global'
+    ? '🌐 <strong>Toàn hệ thống</strong> · Google Sheets'
+    : '💻 <strong>Cục bộ</strong> · Chưa kết nối thống kê chung';
   const scopeEl = el('statsScope');
-  if (scopeEl) {
-    scopeEl.innerHTML = state.visitsScope === 'global'
-      ? '🌐 <strong>Thống kê toàn hệ thống</strong> · Dữ liệu được tổng hợp từ Google Sheets.'
-      : '💻 <strong>Chế độ cục bộ</strong> · Chưa cấu hình Google Apps Script nên số liệu chỉ tính trên trình duyệt này.';
+  if (scopeEl) scopeEl.innerHTML = scopeHtml;
+  const detailScope = el('statsScopeDetail');
+  if (detailScope) detailScope.innerHTML = scopeHtml;
+  renderAppRanking();
+}
+
+function renderAppRanking() {
+  const box = el('appRanking');
+  if (!box) return;
+  const ranked = state.apps
+    .filter(app => app.url && app.url.trim())
+    .map(app => ({ ...app, opens: Number(state.appTotals[app.id] || 0) }))
+    .sort((a, b) => b.opens - a.opens || a.name.localeCompare(b.name, 'vi'));
+
+  if (state.visitsScope !== 'global') {
+    box.innerHTML = '<div class="ranking-empty">Kết nối Google Apps Script để xem xếp hạng lượt mở ứng dụng trên toàn hệ thống.</div>';
+    return;
   }
+  if (!ranked.length || ranked.every(x => x.opens === 0)) {
+    box.innerHTML = '<div class="ranking-empty">Chưa có dữ liệu lượt mở ứng dụng.</div>';
+    return;
+  }
+
+  const max = Math.max(...ranked.map(x => x.opens), 1);
+  box.innerHTML = ranked.map((app, index) => {
+    const pct = Math.max(4, Math.round(app.opens / max * 100));
+    return `
+      <div class="ranking-row">
+        <div class="ranking-index">${index + 1}</div>
+        <div class="ranking-icon">${app.icon || '🧩'}</div>
+        <div class="ranking-main">
+          <div class="ranking-title"><strong>${escapeHtml(app.name)}</strong><span>${app.opens.toLocaleString('vi-VN')} lượt</span></div>
+          <div class="ranking-track"><span style="width:${pct}%"></span></div>
+        </div>
+      </div>`;
+  }).join('');
 }
 
 function renderHeaderText() {
@@ -346,9 +385,21 @@ function renderHeaderText() {
 function renderAll() {
   renderCategories();
   renderHeaderText();
+  renderViewLayout();
   renderApps();
   renderRecent();
   renderStats();
+}
+
+function renderViewLayout() {
+  const isStats = state.view === 'stats';
+  const hero = el('heroSection');
+  const layout = el('mainLayout');
+  const statsDetail = el('statsDetail');
+  if (hero) hero.classList.toggle('hidden', isStats);
+  if (layout) layout.classList.toggle('hidden', isStats);
+  if (statsDetail) statsDetail.classList.toggle('hidden', !isStats);
+  if (categoryTabs) categoryTabs.classList.toggle('hidden', isStats);
 }
 
 function toggleFavorite(id) {
@@ -393,25 +444,21 @@ function setActiveNav(view) {
 
 function changeView(view) {
   if (view === 'admin') {
-    toast('Trang Quản trị sẽ triển khai ở V2. V1.5 quản lý app bằng apps.json và thống kê toàn hệ thống bằng Google Sheets.');
+    toast('Quản trị nâng cao sẽ được bổ sung sau. Hiện tại ứng dụng được quản lý bằng apps.json.');
     return;
   }
   state.view = view;
-  if (view === 'home') state.category = 'Tất cả';
-  if (view === 'stats') {
-    state.view = 'all';
-    toast(`Hôm nay: ${state.visitsToday.toLocaleString('vi-VN')} · 7 ngày: ${state.visits7Days.toLocaleString('vi-VN')} · Toàn thời gian: ${state.visitsTotal.toLocaleString('vi-VN')}.`);
-  }
-  setActiveNav(view === 'stats' ? 'stats' : state.view);
+  if (view === 'home' || view === 'stats') state.category = 'Tất cả';
+  setActiveNav(view);
   renderAll();
   document.querySelector('.sidebar').classList.remove('open');
 }
 
-document.querySelectorAll('.nav-item').forEach(btn => btn.addEventListener('click', () => changeView(btn.dataset.view)));
+document.querySelectorAll('.nav-item, .admin-link').forEach(btn => btn.addEventListener('click', () => changeView(btn.dataset.view)));
 
 searchInput.addEventListener('input', e => {
   state.query = e.target.value.trim();
-  if (state.query && state.view === 'home') { state.view = 'all'; setActiveNav('all'); }
+  if (state.query && (state.view === 'home' || state.view === 'stats')) { state.view = 'all'; setActiveNav('all'); }
   renderAll();
 });
 
@@ -423,6 +470,7 @@ document.addEventListener('keydown', e => {
 });
 
 el('viewRecentBtn').onclick = () => changeView('recent');
+if (el('viewStatsBtn')) el('viewStatsBtn').onclick = () => changeView('stats');
 el('mobileMenu').onclick = () => el('sidebar').classList.toggle('open');
 el('clearFavoritesBtn').onclick = () => {
   if (!state.favorites.size) return toast('Chưa có ứng dụng yêu thích để xóa.');

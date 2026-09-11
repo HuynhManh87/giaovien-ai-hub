@@ -257,3 +257,94 @@ kbd { border: 1px solid #d8e3ee; border-bottom-width: 2px; border-radius: 7px; p
 .stats-global-grid { grid-template-columns: repeat(2, 1fr); }
 .usage-badge { background: #eef9ff; color: #166e9f; }
 .stats-scope strong { color: #365b7d; }
+
+/* V1.6 - tinh gọn giao diện, thống kê chi tiết, nhận diện tác giả */
+.admin-link {
+  width: 100%; margin-top: 12px; padding: 8px 10px; border: 1px solid rgba(255,255,255,.14);
+  border-radius: 10px; background: rgba(255,255,255,.04); color: #a9cce4; text-align: left;
+  font-size: 11px; opacity: .85;
+}
+.admin-link:hover { background: rgba(255,255,255,.08); color: #fff; opacity: 1; }
+
+.app-card { min-height: 270px; }
+.app-card h3 {
+  min-height: 45px; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+.app-description {
+  min-height: 44px; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+.update-note {
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden;
+}
+.app-meta { min-height: 28px; align-content: flex-start; }
+.badge.sync-ok { background: #e9fbf3; color: #117653; }
+.badge.missing { background: #fff7e9; color: #9b650f; }
+
+.stats-global-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+.stat-box { min-height: 94px; }
+.stat-box strong { font-size: 26px; }
+
+.stats-detail {
+  margin-top: 4px;
+}
+.stats-detail-grid {
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px;
+  margin-bottom: 18px;
+}
+.detail-stat {
+  min-height: 145px; padding: 20px; border-radius: 18px; border: 1px solid #dce8f3;
+  background: #fff; box-shadow: var(--shadow); display: flex; flex-direction: column; justify-content: center;
+}
+.detail-stat span { color: #6a84a0; font-size: 13px; font-weight: 700; }
+.detail-stat strong { margin: 6px 0 4px; color: #1266b9; font-size: 34px; line-height: 1; }
+.detail-stat small { color: #93a5b7; font-size: 11px; }
+.detail-stat.accent { background: linear-gradient(145deg, #edf8ff, #edfdf7); border-color: #cfe7ef; }
+.detail-stat.accent strong { color: #087a9e; }
+
+.stats-ranking-card {
+  padding: 22px; border-radius: 20px; background: #fff; border: 1px solid var(--line); box-shadow: var(--shadow);
+}
+.stats-ranking-head { display: flex; justify-content: space-between; gap: 16px; align-items: flex-start; margin-bottom: 14px; }
+.stats-ranking-head h3 { margin: 0 0 5px; font-size: 19px; color: #173f68; }
+.stats-ranking-head p { margin: 0; color: #7a91aa; font-size: 13px; }
+.stats-scope-pill {
+  flex: 0 0 auto; padding: 7px 10px; border-radius: 999px; background: #f4f8fc; border: 1px solid #dbe7f1;
+  color: #68829d; font-size: 11px;
+}
+.app-ranking { display: flex; flex-direction: column; gap: 10px; }
+.ranking-row {
+  display: grid; grid-template-columns: 30px 42px minmax(0,1fr); gap: 12px; align-items: center;
+  padding: 10px 0; border-bottom: 1px solid #edf3f8;
+}
+.ranking-row:last-child { border-bottom: 0; }
+.ranking-index {
+  width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center;
+  background: #eef6ff; color: #3077bb; font-size: 12px; font-weight: 800;
+}
+.ranking-icon {
+  width: 42px; height: 42px; display: grid; place-items: center; border-radius: 12px;
+  background: linear-gradient(145deg, #f0f8ff, #ecfbf7); font-size: 23px;
+}
+.ranking-title { display: flex; justify-content: space-between; gap: 14px; align-items: baseline; }
+.ranking-title strong { min-width: 0; color: #234d75; font-size: 13px; }
+.ranking-title span { flex: 0 0 auto; color: #6d87a1; font-size: 12px; font-weight: 700; }
+.ranking-track { height: 7px; margin-top: 7px; border-radius: 999px; background: #edf3f8; overflow: hidden; }
+.ranking-track span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #2692fb, #26b6b0); }
+.ranking-empty { padding: 28px; border-radius: 14px; background: #f8fbfe; color: #7a91aa; text-align: center; font-size: 13px; }
+
+@media (max-width: 1280px) {
+  .stats-detail-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+}
+@media (max-width: 680px) {
+  .stats-detail-grid { grid-template-columns: 1fr 1fr; gap: 9px; }
+  .detail-stat { min-height: 118px; padding: 14px; }
+  .detail-stat strong { font-size: 28px; }
+  .stats-ranking-card { padding: 16px; }
+  .stats-ranking-head { flex-direction: column; }
+  .ranking-row { grid-template-columns: 26px 38px minmax(0,1fr); gap: 8px; }
+  .ranking-title { gap: 8px; }
+  .ranking-title strong { font-size: 12px; }
+  .ranking-title span { font-size: 11px; }
+}
