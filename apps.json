@@ -1,0 +1,110 @@
+[
+  {
+    "id": "tich-hop-ai",
+    "name": "Tích hợp NLS – AI – Hòa nhập",
+    "description": "Tích hợp tự động năng lực số, giáo dục AI và nội dung hòa nhập vào giáo án theo đúng yêu cầu.",
+    "category": "Giáo án",
+    "version": "V14",
+    "icon": "🤖",
+    "url": "https://giao-an-tich-hop-all-in.bacgptplus27.chatgpt.site/",
+    "metadataUrl": "https://giao-an-tich-hop-all-in.bacgptplus27.chatgpt.site/app-info.js",
+    "updated": "2026-09-11",
+    "featured": true
+  },
+  {
+    "id": "giao-an-song-ngu",
+    "name": "Giáo án song ngữ",
+    "description": "Tra cứu và dịch thuật ngữ song ngữ, hỗ trợ xuất Word và giữ cấu trúc tài liệu.",
+    "category": "Giáo án",
+    "version": "V4.5.1",
+    "icon": "🌐",
+    "url": "https://giaoansongngu.vercel.app/",
+    "metadataUrl": "https://giaoansongngu.vercel.app/app-info.js",
+    "updated": "2026-09-08",
+    "featured": true
+  },
+  {
+    "id": "toan-ai",
+    "name": "Phiếu bài tập Toán THCS",
+    "description": "Tạo phiếu học tập, bài tập, đề kiểm tra và hỗ trợ hình học cho môn Toán THCS.",
+    "category": "Dạy học",
+    "version": "V35",
+    "icon": "➗",
+    "url": "https://phieu-toan-thcs.bacgptplus27.chatgpt.site/",
+    "metadataUrl": "https://phieu-toan-thcs.bacgptplus27.chatgpt.site/app-info.js",
+    "updated": "2026-09-11",
+    "featured": true
+  },
+  {
+    "id": "khtn-ai",
+    "name": "Phiếu bài tập KHTN",
+    "description": "Hỗ trợ xây dựng câu hỏi, bài tập và hoạt động vận dụng thực tế cho Khoa học tự nhiên.",
+    "category": "Dạy học",
+    "version": "V42",
+    "icon": "🧪",
+    "url": "https://phieu-khtn-ai.bacgptplus27.chatgpt.site/",
+    "metadataUrl": "https://phieu-khtn-ai.bacgptplus27.chatgpt.site/app-info.js",
+    "updated": "2026-09-11",
+    "featured": true
+  },
+  {
+    "id": "tkb",
+    "name": "Xem thời khóa biểu",
+    "description": "Tra cứu thời khóa biểu nhà trường nhanh chóng trên máy tính và điện thoại.",
+    "category": "Quản lý",
+    "version": "V1",
+    "icon": "🗓️",
+    "url": "https://tkb-school-long-binh.vercel.app/",
+    "metadataUrl": "https://tkb-school-long-binh.vercel.app/app-info.js",
+    "updated": "2026-09-11",
+    "featured": false
+  },
+  {
+    "id": "quan-ly-hoc-them",
+    "name": "Quản lý học thêm",
+    "description": "Theo dõi lớp học, học sinh, học phí, điểm danh và lịch học trên một nơi.",
+    "category": "Quản lý",
+    "version": "V1",
+    "icon": "👥",
+    "url": "",
+    "metadataUrl": "",
+    "updated": "2026-09-09",
+    "featured": false
+  },
+  {
+    "id": "chuan-hoa-giao-an",
+    "name": "Chuẩn hóa giáo án",
+    "description": "Rà soát, định dạng và hoàn thiện giáo án theo mẫu thống nhất của nhà trường.",
+    "category": "Giáo án",
+    "version": "V1",
+    "icon": "📄",
+    "url": "",
+    "metadataUrl": "",
+    "updated": "2026-09-08",
+    "featured": false
+  },
+  {
+    "id": "quan-ly-cong-viec",
+    "name": "Quản lý công việc",
+    "description": "Theo dõi nhiệm vụ, tiến độ, nhắc việc và phân loại công việc hằng ngày.",
+    "category": "Quản lý",
+    "version": "V1",
+    "icon": "✅",
+    "url": "",
+    "metadataUrl": "",
+    "updated": "2026-09-08",
+    "featured": false
+  },
+  {
+    "id": "ke-hoach-ca-nhan",
+    "name": "Kế hoạch cá nhân giáo viên THCS",
+    "description": "Lập và theo dõi kế hoạch cá nhân, công việc và tiến độ thực hiện dành cho giáo viên THCS.",
+    "category": "Quản lý",
+    "version": "V1",
+    "icon": "📋",
+    "url": "https://ke-hoach-ca-nhan-giao-vien-thcs.ava-collins809512.chatgpt.site/",
+    "metadataUrl": "https://ke-hoach-ca-nhan-giao-vien-thcs.ava-collins809512.chatgpt.site/app-info.js",
+    "updated": "2026-09-11",
+    "featured": true
+  }
+]
