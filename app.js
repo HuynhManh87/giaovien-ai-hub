@@ -3,11 +3,11 @@ const FALLBACK_APPS = [
   {id:'giao-an-song-ngu',name:'Giáo án song ngữ',description:'Tra cứu và dịch thuật ngữ song ngữ, hỗ trợ xuất Word và giữ cấu trúc tài liệu.',category:'Giáo án',version:'V4.5.1',icon:'🌐',url:'https://giaoansongngu.vercel.app/',metadataUrl:'https://giaoansongngu.vercel.app/app-info.js',updated:'2026-09-08',featured:true},
   {id:'toan-ai',name:'Phiếu bài tập Toán THCS',description:'Tạo phiếu học tập, bài tập, đề kiểm tra và hỗ trợ hình học cho môn Toán THCS.',category:'Dạy học',version:'V35',icon:'➗',url:'https://phieu-toan-thcs.bacgptplus27.chatgpt.site/',metadataUrl:'https://phieu-toan-thcs.bacgptplus27.chatgpt.site/app-info.js',updated:'2026-09-11',featured:true},
   {id:'khtn-ai',name:'Phiếu bài tập KHTN',description:'Hỗ trợ xây dựng câu hỏi, bài tập và hoạt động vận dụng thực tế cho Khoa học tự nhiên.',category:'Dạy học',version:'V42',icon:'🧪',url:'https://phieu-khtn-ai.bacgptplus27.chatgpt.site/',metadataUrl:'https://phieu-khtn-ai.bacgptplus27.chatgpt.site/app-info.js',updated:'2026-09-11',featured:true},
-  {id:'tkb',name:'Xem thời khóa biểu',description:'Tra cứu thời khóa biểu nhà trường nhanh chóng trên máy tính và điện thoại.',category:'Quản lý',version:'V1',icon:'🗓️',url:'https://tkb-school-long-binh.vercel.app/',metadataUrl:'https://tkb-school-long-binh.vercel.app/app-info.js',updated:'2026-09-11',featured:true},
+  {id:'tkb',name:'Xem thời khóa biểu',description:'Tra cứu thời khóa biểu nhà trường nhanh chóng trên máy tính và điện thoại.',category:'Quản lý',school:'THCS Long Bình',version:'V1',icon:'🗓️',url:'https://tkb-school-long-binh.vercel.app/',metadataUrl:'https://tkb-school-long-binh.vercel.app/app-info.js',updated:'2026-09-11',featured:false},
   {id:'quan-ly-hoc-them',name:'Quản lý học thêm',description:'Theo dõi lớp học, học sinh, học phí, điểm danh và lịch học trên một nơi.',category:'Quản lý',version:'V1',icon:'👥',url:'',metadataUrl:'',updated:'2026-09-09',featured:false},
   {id:'chuan-hoa-giao-an',name:'Chuẩn hóa giáo án',description:'Rà soát, định dạng và hoàn thiện giáo án theo mẫu thống nhất của nhà trường.',category:'Giáo án',version:'V1',icon:'📄',url:'',metadataUrl:'',updated:'2026-09-08',featured:false},
   {id:'quan-ly-cong-viec',name:'Quản lý công việc',description:'Theo dõi nhiệm vụ, tiến độ, nhắc việc và phân loại công việc hằng ngày.',category:'Quản lý',version:'V1',icon:'✅',url:'',metadataUrl:'',updated:'2026-09-08',featured:false},
-  {id:'ke-hoach-ca-nhan',name:'Kế hoạch cá nhân giáo viên THCS',description:'Lập và theo dõi kế hoạch cá nhân, công việc và tiến độ thực hiện dành cho giáo viên THCS.',category:'Quản lý',version:'V1',icon:'📋',url:'https://ke-hoach-ca-nhan-giao-vien-thcs.ava-collins809512.chatgpt.site/',metadataUrl:'https://ke-hoach-ca-nhan-giao-vien-thcs.ava-collins809512.chatgpt.site/app-info.js',updated:'2026-09-11',featured:true}
+  {id:'ke-hoach-ca-nhan',name:'Kế hoạch cá nhân giáo viên THCS',description:'Lập và theo dõi kế hoạch cá nhân, công việc và tiến độ thực hiện dành cho giáo viên THCS.',category:'Quản lý',school:'THCS Long Bình',version:'V1',icon:'📋',url:'https://ke-hoach-ca-nhan-giao-vien-thcs.ava-collins809512.chatgpt.site/',metadataUrl:'https://ke-hoach-ca-nhan-giao-vien-thcs.ava-collins809512.chatgpt.site/app-info.js',updated:'2026-09-11',featured:false}
 ];
 
 const CONFIG = Object.assign({
@@ -237,6 +237,7 @@ function renderCategories() {
 function getVisibleApps() {
   let list = [...state.apps];
   if (state.view === 'home') list = list.filter(x => x.featured);
+  if (state.view === 'longbinh') list = list.filter(x => x.school === 'THCS Long Bình' || ['tkb','ke-hoach-ca-nhan'].includes(x.id));
   if (state.view === 'favorites') list = list.filter(x => state.favorites.has(x.id));
   if (state.view === 'recent') list.sort((a,b) => new Date(b.updated) - new Date(a.updated));
   if (state.category !== 'Tất cả') list = list.filter(x => x.category === state.category);
@@ -373,6 +374,7 @@ function renderHeaderText() {
   const config = {
     home: ['Ứng dụng nổi bật', 'Những công cụ thầy/cô có thể mở nhanh từ cổng chung.'],
     all: ['Tất cả ứng dụng', 'Lọc theo nhóm hoặc gõ từ khóa để tìm đúng công cụ cần dùng.'],
+    longbinh: ['THCS Long Bình', 'Các ứng dụng dành riêng cho giáo viên Trường THCS Long Bình.'],
     favorites: ['Ứng dụng yêu thích', 'Các ứng dụng đã được đánh dấu sao trên trình duyệt này.'],
     recent: ['Mới cập nhật', 'Phiên bản và ngày cập nhật được ưu tiên lấy tự động từ từng app khi có app-info.js.'],
     stats: ['Thống kê sử dụng', 'Theo dõi lượt truy cập theo ngày, theo tháng, toàn thời gian và lượt mở ứng dụng.']
@@ -399,7 +401,7 @@ function renderViewLayout() {
   if (hero) hero.classList.toggle('hidden', isStats);
   if (layout) layout.classList.toggle('hidden', isStats);
   if (statsDetail) statsDetail.classList.toggle('hidden', !isStats);
-  if (categoryTabs) categoryTabs.classList.toggle('hidden', isStats);
+  if (categoryTabs) categoryTabs.classList.toggle('hidden', isStats || state.view === 'longbinh');
 }
 
 function toggleFavorite(id) {
@@ -448,7 +450,7 @@ function changeView(view) {
     return;
   }
   state.view = view;
-  if (view === 'home' || view === 'stats') state.category = 'Tất cả';
+  if (view === 'home' || view === 'stats' || view === 'longbinh') state.category = 'Tất cả';
   setActiveNav(view);
   renderAll();
   document.querySelector('.sidebar').classList.remove('open');

@@ -49,6 +49,10 @@ button { cursor: pointer; }
 .nav-item.active { background: linear-gradient(90deg, rgba(32,137,248,.9), rgba(55,158,255,.72)); color: #fff; box-shadow: 0 10px 24px rgba(0,0,0,.13); }
 .nav-icon { width: 25px; font-size: 21px; text-align: center; }
 .nav-item small { margin-left: auto; padding: 2px 7px; border-radius: 999px; background: rgba(255,255,255,.18); }
+.nav-item.school-nav { border: 1px solid rgba(133,214,255,.16); }
+.nav-item.school-nav:not(.active) { background: rgba(70,178,255,.06); }
+.nav-item.school-nav small { background: rgba(102,212,255,.18); color: #dff7ff; }
+
 .sidebar-note { margin-top: auto; padding: 24px 16px 14px; border-top: 1px solid rgba(255,255,255,.18); color: #bbd5ef; }
 .sidebar-note p { margin: 0; line-height: 1.55; font-style: italic; }
 .quote-mark { font-size: 42px; height: 30px; opacity: .6; }
