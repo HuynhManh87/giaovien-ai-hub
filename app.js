@@ -59,7 +59,7 @@ function recordLocalVisit() {
   };
 }
 
-function jsonpRequest(action, params = {}, timeoutMs = 7000) {
+function jsonpRequest(action, params = {}, timeoutMs = 20000) {
   if (!CONFIG.statsApiUrl) return Promise.reject(new Error('Stats API chưa cấu hình'));
   return new Promise((resolve, reject) => {
     const callbackName = `__gvai_cb_${Date.now()}_${Math.random().toString(36).slice(2)}`;
@@ -95,11 +95,33 @@ function jsonpRequest(action, params = {}, timeoutMs = 7000) {
 async function recordVisit() {
   const local = recordLocalVisit();
   if (!CONFIG.statsApiUrl) return local;
+
+  // Ưu tiên đọc thống kê chung trước để giao diện không rơi về "Cục bộ"
+  // chỉ vì thao tác ghi lượt truy cập trên Google Sheets phản hồi chậm.
   try {
-    const data = await jsonpRequest('visit');
-    return normalizeStats(data, 'global');
-  } catch (_) {
-    return local;
+    const snapshot = await jsonpRequest('stats', {}, 20000);
+    const globalStats = normalizeStats(snapshot, 'global');
+
+    // Ghi lượt truy cập ở nền. Khi Google Sheets trả kết quả, cập nhật lại số liệu.
+    jsonpRequest('visit', {}, 30000)
+      .then(data => {
+        applyStats(normalizeStats(data, 'global'));
+        renderAll();
+      })
+      .catch(err => console.warn('[GVAI Stats] Không ghi được lượt truy cập:', err));
+
+    return globalStats;
+  } catch (statsErr) {
+    console.warn('[GVAI Stats] Không đọc được thống kê chung:', statsErr);
+
+    // Thử trực tiếp action=visit thêm một lần trước khi dùng bộ đếm cục bộ.
+    try {
+      const data = await jsonpRequest('visit', {}, 30000);
+      return normalizeStats(data, 'global');
+    } catch (visitErr) {
+      console.warn('[GVAI Stats] Chuyển sang bộ đếm cục bộ:', visitErr);
+      return local;
+    }
   }
 }
 
