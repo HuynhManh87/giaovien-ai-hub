@@ -89,8 +89,8 @@ async function jsonpRequest(action, params = {}, timeoutMs = 20000) {
   }
 }
 
-async function recordVisit() {
-  const local = recordLocalVisit();
+async function recordVisit(localStats = null) {
+  const local = localStats || recordLocalVisit();
   // V1.6.4 dùng proxy /api/stats cùng tên miền; không phụ thuộc JSONP/CORS.
 
   // Ưu tiên đọc thống kê chung trước để giao diện không rơi về "Cục bộ"
@@ -102,7 +102,9 @@ async function recordVisit() {
     // Ghi lượt truy cập ở nền. Khi Google Sheets trả kết quả, cập nhật lại số liệu.
     jsonpRequest('visit', {}, 30000)
       .then(data => {
-        applyStats(normalizeStats(data, 'global'));
+        const fresh = normalizeStats(data, 'global');
+        saveGlobalStatsCache(fresh);
+        applyStats(fresh);
         renderAll();
       })
       .catch(err => console.warn('[GVAI Stats] Không ghi được lượt truy cập:', err));
@@ -119,6 +121,29 @@ async function recordVisit() {
       console.warn('[GVAI Stats] Chuyển sang bộ đếm cục bộ:', visitErr);
       return local;
     }
+  }
+}
+
+function saveGlobalStatsCache(stats) {
+  try {
+    localStorage.setItem('gvai_global_stats_cache', JSON.stringify({
+      savedAt: Date.now(),
+      data: stats
+    }));
+  } catch (_) {}
+}
+
+function loadGlobalStatsCache() {
+  try {
+    const raw = localStorage.getItem('gvai_global_stats_cache');
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (!parsed || !parsed.data) return null;
+    // Chỉ dùng cache tối đa 10 phút để giao diện hiện số ngay, sau đó cập nhật nền.
+    if (Date.now() - Number(parsed.savedAt || 0) > 10 * 60 * 1000) return null;
+    return normalizeStats(parsed.data, 'global');
+  } catch (_) {
+    return null;
   }
 }
 
@@ -173,7 +198,8 @@ function normalizeText(str='') {
 
 async function loadApps() {
   try {
-    const res = await fetch('./apps.json', { cache: 'no-store' });
+    // Cho phép trình duyệt revalidate thay vì bắt tải mới hoàn toàn mỗi lần mở trang.
+    const res = await fetch('./apps.json', { cache: 'no-cache' });
     if (!res.ok) throw new Error('Không đọc được apps.json');
     state.apps = await res.json();
   } catch (e) {
@@ -181,9 +207,13 @@ async function loadApps() {
   }
 
   state.apps = state.apps.map(app => ({ ...app, syncState: app.metadataUrl ? 'checking' : 'local' }));
+  // Hiện card ngay. Đồng bộ app-info.js chạy nền, không chặn giao diện.
   renderAll();
-  await syncAllRemoteMetadata();
-  renderAll();
+  setTimeout(() => {
+    syncAllRemoteMetadata()
+      .then(() => renderAll())
+      .catch(err => console.warn('[GVAI Metadata] Đồng bộ nền thất bại:', err));
+  }, 700);
 }
 
 async function syncAllRemoteMetadata() {
@@ -518,10 +548,25 @@ function escapeHtml(value='') {
   return String(value).replace(/[&<>'"]/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]));
 }
 
-async function boot() {
-  const visit = await recordVisit();
-  applyStats(visit);
-  await loadApps();
+function boot() {
+  // V1.6.5: ưu tiên tốc độ hiển thị. Không chờ Google Sheets/Apps Script trước khi tải ứng dụng.
+  const local = recordLocalVisit();
+  const cachedGlobal = loadGlobalStatsCache();
+  applyStats(cachedGlobal || local);
+
+  // Tải danh sách app ngay lập tức.
+  loadApps().catch(err => console.warn('[GVAI] Không tải được danh sách ứng dụng:', err));
+
+  // Thống kê toàn hệ thống chạy nền sau một nhịp ngắn để không chặn First Paint.
+  setTimeout(() => {
+    recordVisit(local)
+      .then(stats => {
+        if (stats && stats.scope === 'global') saveGlobalStatsCache(stats);
+        applyStats(stats);
+        renderAll();
+      })
+      .catch(err => console.warn('[GVAI Stats] Cập nhật nền thất bại:', err));
+  }, 250);
 }
 
 boot();
