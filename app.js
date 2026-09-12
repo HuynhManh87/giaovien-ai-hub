@@ -59,42 +59,39 @@ function recordLocalVisit() {
   };
 }
 
-function jsonpRequest(action, params = {}, timeoutMs = 20000) {
-  if (!CONFIG.statsApiUrl) return Promise.reject(new Error('Stats API chưa cấu hình'));
-  return new Promise((resolve, reject) => {
-    const callbackName = `__gvai_cb_${Date.now()}_${Math.random().toString(36).slice(2)}`;
-    const script = document.createElement('script');
-    const timer = setTimeout(() => cleanup(new Error('Stats API timeout')), timeoutMs);
-
-    function cleanup(err, data) {
-      clearTimeout(timer);
-      try { delete window[callbackName]; } catch (_) { window[callbackName] = undefined; }
-      script.remove();
-      if (err) reject(err); else resolve(data);
-    }
-
-    window[callbackName] = data => {
-      if (!data || data.ok === false) return cleanup(new Error(data && data.error ? data.error : 'Stats API error'));
-      cleanup(null, data);
-    };
-
-    const qs = new URLSearchParams({
-      action,
-      siteKey: CONFIG.statsSiteKey || '',
-      callback: callbackName,
-      _: String(Date.now()),
-      ...params
+async function jsonpRequest(action, params = {}, timeoutMs = 20000) {
+  // V1.6.4: gọi API cùng tên miền Vercel để tránh trình duyệt chặn script bên thứ ba.
+  // Tên hàm được giữ nguyên để không phải sửa các chỗ gọi cũ.
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const qs = new URLSearchParams({ action, ...params, _: String(Date.now()) });
+    const response = await fetch(`/api/stats?${qs.toString()}`, {
+      method: 'GET',
+      cache: 'no-store',
+      headers: { 'Accept': 'application/json' },
+      signal: controller.signal
     });
-    script.src = `${CONFIG.statsApiUrl}${CONFIG.statsApiUrl.includes('?') ? '&' : '?'}${qs.toString()}`;
-    script.async = true;
-    script.onerror = () => cleanup(new Error('Không kết nối được Stats API'));
-    document.head.appendChild(script);
-  });
+    let data = null;
+    try { data = await response.json(); } catch (_) {}
+    if (!response.ok) {
+      throw new Error((data && data.error) || `Stats API HTTP ${response.status}`);
+    }
+    if (!data || data.ok === false) {
+      throw new Error((data && data.error) || 'Stats API error');
+    }
+    return data;
+  } catch (err) {
+    if (err && err.name === 'AbortError') throw new Error('Stats API timeout');
+    throw err;
+  } finally {
+    clearTimeout(timer);
+  }
 }
 
 async function recordVisit() {
   const local = recordLocalVisit();
-  if (!CONFIG.statsApiUrl) return local;
+  // V1.6.4 dùng proxy /api/stats cùng tên miền; không phụ thuộc JSONP/CORS.
 
   // Ưu tiên đọc thống kê chung trước để giao diện không rơi về "Cục bộ"
   // chỉ vì thao tác ghi lượt truy cập trên Google Sheets phản hồi chậm.
@@ -452,14 +449,12 @@ function openApp(app) {
   // Mở app ngay để không bị trình duyệt chặn popup.
   window.open(app.url, '_blank', 'noopener,noreferrer');
 
-  if (CONFIG.statsApiUrl) {
-    jsonpRequest('open', { appId: app.id, appName: app.name })
-      .then(data => {
-        applyStats(normalizeStats(data, 'global'));
-        renderAll();
-      })
-      .catch(() => {});
-  }
+  jsonpRequest('open', { appId: app.id, appName: app.name }, 30000)
+    .then(data => {
+      applyStats(normalizeStats(data, 'global'));
+      renderAll();
+    })
+    .catch(err => console.warn('[GVAI Stats] Không ghi được lượt mở app:', err));
 }
 
 function setActiveNav(view) {
